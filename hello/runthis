@@ -1,0 +1,1 @@
+dotnet fsi -r FsLexYacc.Runtime.10.0.0\lib\net46\FsLexYacc.Runtime.dll Hello.fsx

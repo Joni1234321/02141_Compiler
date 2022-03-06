@@ -1,0 +1,18 @@
+Extend the lexer with new tokens and rules in file: 
+    CalculatorLexer.fsl
+
+
+Extend the parser with the new tokens and their precedence and associativity rules in file: 
+    CalculatorLexer.fsp
+
+
+Extend the parser with new grammar rules in file: 
+    CalculatorLexer.fsp
+
+
+Extend the abstract syntax: type expr in file 
+    CalculatorTypesAST.fs
+
+
+Extend the evaluation function eval in file 
+    CalculatorTypesAST.fs
