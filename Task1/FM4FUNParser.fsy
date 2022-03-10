@@ -1,0 +1,135 @@
+// Open the file that defines the type "expr" we shall use as AST
+%{
+open FM4FUNTypesAST
+%}
+
+// ( ) [ ] [] : ;
+%token LPAR RPAR RBRACKET LBRACKET BRACKETS COLON SEMICOLON
+
+// a ::= n | x | A[a] | a + a | a - a | a * a | a % a | a / a |
+// -a | a ^ a | (a)
+%token <float> NUM
+%token <string> VAR
+%token PLUS MINUS TIMES MOD DIV POW
+
+// b ::= true | false | b & b | b | b | b && b | b || b | !b | 
+// a = a | a != a | a > a | a >= a | a < a | a <= a | (b)
+%token TRUE FALSE NOT AND OR FORALL EXISTS EOF
+%token EQUAL NEQUAL GREATER GREATEREQUAL LESS LESSEQUAL
+
+// c ::= x := a | A[a] := a | skip | C; C | if GC fi | do GC od | continue 
+// | break | try C catch HC yrt | throw e
+%token ASSIGN SKIP IF FI DO OD
+
+// GC ::= b -> C | GC [] GC
+%token ARROW
+
+// HC ::= e: C | HC [] HC
+%token COMPILERERROR
+
+// types
+%start start
+%type <c> start
+
+%type <a> aexpr0
+%type <a> aexpr1
+%type <a> aexpr2
+%type <a> aexpr3
+
+%type <b> bexpr0
+%type <b> bexpr1
+%type <b> bexpr2
+
+%type <c> cexpr0 
+%type <c> cexpr1 
+
+%type <gc> gcexpr0
+%type <gc> gcexpr1
+
+// Grammar productions
+%%
+
+// The first production in "formal" notation is
+// start -> expression
+// here written:
+start: cexpr0 EOF             { $1 }
+
+// Note that we need to insert an End-Of-File (EOF)
+// The code annotation { $1 } specifies that parsing with this production
+// returns whatever parsing the expression returns: $1 is the result of parsing
+// the first component of the production (i.e. expression)
+
+// The productions for expressions are like in the grammar we saw in class
+// written in the yacc format:
+
+aexpr0:
+  | aexpr0 PLUS aexpr1   { PlusExpr ($1, $3) }
+  | aexpr0 MINUS aexpr1  { MinusExpr ($1, $3) }
+  | aexpr1               { $1 }
+
+aexpr1:
+  | aexpr1 TIMES aexpr2  { TimesExpr ($1, $3) }
+  | aexpr1 DIV aexpr2    { DivExpr ($1, $3) }
+  | aexpr1 MOD aexpr2    { ModExpr ($1, $3) } 
+  | aexpr2               { $1 }
+
+aexpr2:
+  | aexpr3 POW aexpr2    { PowExpr ($1, $3) }
+  | aexpr3               { $1 }
+
+aexpr3:
+  | PLUS aexpr3                  { UPlusExpr ($2) }  
+  | MINUS aexpr3                 { UMinusExpr ($2) } 
+  | NUM                          { Num($1) }
+  | VAR                          { Var($1) }
+  | VAR LBRACKET aexpr0 RBRACKET { ArrayVar($1, $3) }
+  | LPAR aexpr0 RPAR             { $2 }
+
+bexpr0:
+  | bexpr0 OR bexpr1      { OrOp ($1, $3) }
+  | bexpr0 EXISTS bexpr1  { ExistsOp ($1, $3) }
+  | bexpr1                { $1 }
+
+bexpr1:
+  | bexpr1 AND bexpr2     { AndOp ($1, $3) }
+  | bexpr1 FORALL bexpr2  { ForAllOp ($1, $3) }
+  | bexpr2                { $1 }
+
+bexpr2:
+  | NOT bexpr2            { NotOp ($2) }
+  | TRUE                  { Bool(true) }
+  | FALSE                 { Bool(false) }
+  | LPAR bexpr0 RPAR      { $2 }
+// Comparisons
+  | aexpr0 EQUAL aexpr0   { EqualOp($1, $3) }
+  | aexpr0 NEQUAL aexpr0  { NEqualOp($1, $3) }
+  | aexpr0 GREATER aexpr0 { GreaterOp($1, $3) }
+  | aexpr0 GREATEREQUAL aexpr0  { GreaterEqualOp ($1, $3) }
+  | aexpr0 LESS aexpr0          { LessOp ($1, $3) }
+  | aexpr0 LESSEQUAL aexpr0     { LessEqualOp ($1, $3) }
+
+
+cexpr0:
+  | cexpr1 SEMICOLON cexpr0       { MultipleStatement ($1, $3) }
+  | cexpr1 {$1}
+
+cexpr1:
+  | VAR ASSIGN aexpr0             { AssignStatement ($1, $3) }
+  | VAR LBRACKET aexpr0 RBRACKET ASSIGN aexpr0   { AssignArrayStatement ($1, $3, $6) }
+  | IF gcexpr0 FI                 { IfStatement ($2) }
+  | DO gcexpr0 OD                 { DoStatement ($2) }
+  | SKIP                          { SkipStatement }
+
+gcexpr0: 
+  | gcexpr1 BRACKETS gcexpr0 { ElseStatement($1, $3) }
+  | gcexpr1 { $1 } 
+gcexpr1:
+  | bexpr0 ARROW cexpr0 { ThenStatement($1, $3) }
+
+
+// Again, the code annotation specifies the result of parsing
+// For example { TimesExpr($1,$3) } specifies that parsing with the production
+// returns the value TimesExpr($1,$3), where $i is the result of parsing
+// component i in the production (in this case the lhs and rhs operands)
+
+%%
