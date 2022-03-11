@@ -160,7 +160,7 @@ let buildArrayVariable (ls : float list) =
     ArrayVariable(ba ls Map.empty<int, float> 0)
 
 let factorialGCL = (
-    "Factorial",
+    "Factorial ",
     "
     x:=4;
     y:=1;

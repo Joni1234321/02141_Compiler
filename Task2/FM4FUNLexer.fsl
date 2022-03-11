@@ -1,0 +1,83 @@
+// The generated lexer module will start with this code
+{
+module FM4FUNLexer
+open FSharp.Text.Lexing
+open System
+// open the module that defines the tokens
+open FM4FUNParser
+// Set the language to English such that 4.0 is parsed as 4 and not 40.
+System.Globalization.CultureInfo.CurrentCulture <- new System.Globalization.CultureInfo("en-US")
+
+let keywords = Map.ofList [
+        "true", TRUE
+        "false", FALSE
+        "skip", SKIP
+        "if", COMPILERERROR
+        "fi", COMPILERERROR
+        "do", COMPILERERROR
+        "od", COMPILERERROR
+    ]
+}
+
+
+
+// We define macros for some regular expressions we will use later
+let digit       = ['0'-'9']
+let char        = ['a'-'z' 'A'-'Z']
+let num         = digit+ ( '.' digit+)?  ('E' ('+'|'-')? digit+ )?
+let var         = char (char|digit|['_'])*
+let whitespace  = ' ' | '\u00A0' | "\f" | "\n" | "\r" | "\t" | "\v"   
+let newline     = "\n\r" | '\n' | '\r'
+
+
+
+// We define now the rules for recognising and building tokens
+// for each of the tokens of our language we need a rule
+// NOTE: rules are applied in order top-down.
+//       This is important when tokens overlap (not in this example)
+
+
+rule tokenize = parse 
+// 
+| '('           { LPAR }
+| ')'           { RPAR }
+| "[]"          { BRACKETS }
+| '['           { LBRACKET }
+| ']'           { RBRACKET }
+| ':'           { COLON }
+| ';'           { SEMICOLON }
+// 
+| '+'           { PLUS }
+| '-'           { MINUS }
+| '*'           { TIMES }
+| '%'           { MOD }
+| '/'           { DIV }
+| '^'           { POW }
+//
+| '!'           { NOT }
+| '&'           { AND }
+| '|'           { OR }
+| "&&"          { FORALL }
+| "||"          { EXISTS }
+//
+| '='           { EQUAL }
+| "!="          { NEQUAL }
+| ">="          { GREATEREQUAL }
+| "<="          { LESSEQUAL }
+| '>'           { GREATER }
+| '<'           { LESS }
+// 
+| ":="          { ASSIGN }
+| "->"          { ARROW }
+| "if" whitespace { IF }
+| whitespace "fi" { FI }
+| "do" whitespace { DO }
+| whitespace "od" { OD }
+| whitespace    { tokenize lexbuf }
+| newline       { lexbuf.EndPos <- lexbuf.EndPos.NextLine; tokenize lexbuf; }
+| num           { NUM(Double.Parse(LexBuffer<_>.LexemeString lexbuf)) }
+| var          { match keywords.TryFind (LexBuffer<_>.LexemeString lexbuf) with 
+                    | Some(token) -> token
+                    | None -> VAR(LexBuffer<_>.LexemeString lexbuf) }
+
+| eof           { EOF }
