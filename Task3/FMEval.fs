@@ -1,7 +1,14 @@
 module FMEval
 
 open FM4FUNTypesAST
-open FMMemory
+
+// Vars are floats, and Arrays are stored as maps
+type VType = 
+    | Variable of float
+    | ArrayVariable of Map<int, float>
+
+// Default memory is empty, which requires all variable declaration to be made in the code
+let defaultmem = Map.empty<string, VType>
 
 // The mem doen't change when it goes through the a or b expressions
 // a -> mem -> float

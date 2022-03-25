@@ -12,8 +12,6 @@ open FM4FUNParser
 open FM4FUNLexer
 
 // Order is important i guess ... 
-#load "FMMemory.fs"
-open FMMemory
 
 #load "FMEval.fs"
 open FMEval
