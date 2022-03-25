@@ -21,6 +21,13 @@ open FMEval
 #load "FMTest.fs"
 open FMTest
 
+#load "FMGraph.fs"
+open FMGraph
+
+#load "FMPrint.fs"
+open FMPrint
+
+
 open System.Collections.Generic
 
 
@@ -32,18 +39,25 @@ let parse input =
     // return the result of parsing (i.e. value of type "expr")
     res
 
+
 // Test a given testgcl 
 let testGCL ( gcl : TestGCL ) =
     let (name, code, memin, memout) = gcl
 
-    // Print result
     try
+    // Print result
     let c = parse code
+    
 
+    // Run code and get memory
     let mem = (evalc c memin)
     printfn "Result of %s: %A" name mem
     
-    printfn "%A" c
+    printfn "Pretty print: "
+//    printfn "%A" c
+//    printfn "%s" (printCTree c)
+//    printfn "%A" (graph c false)
+    printfn "%s" (printPG (graph c true))
 
     // Test the memory
     let passed = testmem mem memout

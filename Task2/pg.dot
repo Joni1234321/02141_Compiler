@@ -1,0 +1,8 @@
+digraph G {
+q0 -> q1 [label="y:=11.000000"]
+q1 -> q2 [label="x:=10.000000"]
+q2 -> q3 [label="( ( x ) >= ( y ) ) & ( !( false ) )"]
+q3 -> q1000000 [label="z:=x"]
+q2 -> q4 [label="( ( y ) > ( x ) ) & ( !( ( ( x ) >= ( y ) ) | ( false ) ) )"]
+q4 -> q1000000 [label="z:=y"]
+}

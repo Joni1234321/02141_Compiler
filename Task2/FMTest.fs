@@ -84,8 +84,7 @@ let averageGCL = (
                         i:=i+1
     [] (n>i)&&(0>A[i]) -> i:=i+1
     od;
-    x:=x/y
-    ",
+    x:=x/y",
     Map ["A", buildArrayVariable arrayToAvg; "n", Variable(float(arrayToAvg.Length))],
     Map ["x", Variable(getAvg arrayToAvg)]
 )
