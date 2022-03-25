@@ -1,1 +1,1 @@
-dot -Tsvg pg.dot > output.svg
+dot -Tsvg pg.dot > pg.svg
