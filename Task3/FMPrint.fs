@@ -55,7 +55,7 @@ let printMem mem : string =
         match var with 
         | Variable(f) -> sprintf "%g" f
         | ArrayVariable (array) -> 
-            Seq.foldBack(fun k rest -> sprintf "%g, %s" (Map.find k array) rest) (Map.keys array) ""   
+            Seq.foldBack(fun k rest -> sprintf "[%i: %g], %s" k (Map.find k array) rest) (Map.keys array) ""   
     
     let printField k s = 
         sprintf "%s: %s\n%s" k (varToString (Map.find k mem)) s
