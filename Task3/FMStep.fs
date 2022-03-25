@@ -32,7 +32,7 @@ let getMap (pg : ProgramGraph) : ProgramMap =
 
 // Give state, the programMap and memory and return memory and next state
 let evalStep (q : int) (pm : ProgramMap) (mem : Map<string, VType>) : (int * Map<string, VType>) =
-    printfn "q%i - %A" q mem
+    printfn "Node: %i\n%s" q (printMem mem)
     match Map.tryFind q pm with 
     | Some(StepB(ls)) ->
         // If no condition is true then it raises an exception 

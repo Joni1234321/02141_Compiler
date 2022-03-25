@@ -65,7 +65,7 @@ let testGCL ( gcl : TestGCL ) =
 
     printfn "%s" (printPG pg)
 //    printfn "%A" pm
-    printfn "%i - %A" q mem
+    printfn "Node: %i\n%s" q (printMem mem)
 
     // Test the memory
     let passed = testmem mem memout

@@ -49,3 +49,15 @@ let printPG (pg : ProgramGraph) : string =
     let pgstring = List.foldBack (fun edge s -> sprintf "%s\n%s" (edgetostring edge) s) pg ""
 
     sprintf "digraph G {\n%s}\n" (pgstring)
+
+let printMem mem : string =
+    let varToString var : string =
+        match var with 
+        | Variable(f) -> sprintf "%g" f
+        | ArrayVariable (array) -> 
+            Seq.foldBack(fun k rest -> sprintf "%g, %s" (Map.find k array) rest) (Map.keys array) ""   
+    
+    let printField k s = 
+        sprintf "%s: %s\n%s" k (varToString (Map.find k mem)) s
+
+    Seq.foldBack printField (Map.keys mem) ""
