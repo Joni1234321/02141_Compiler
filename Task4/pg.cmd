@@ -1,0 +1,1 @@
+dot -Tsvg pg.dot > pg.svg
