@@ -13,7 +13,6 @@ let rec doneGCd gc =
     | ElseStatement (gc1, gc2) -> AndOp (doneGC gc1, doneGC gc2)
     
 
-
 let rec graphA a : string = 
     match a with
     | Num(n) -> sprintf "%f" n
