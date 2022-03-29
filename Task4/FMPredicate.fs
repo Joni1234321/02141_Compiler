@@ -66,26 +66,3 @@ let computeShortestPath (pg : ProgramGraph) (preds : Map<int, Predicate>) : Set<
     
     // Do for all 
     Map.foldBack (fun q p s -> Set.union s (build (q, [], q))) preds Set.empty  
-
-// let evalExpression (programMem, logicalMem) expression = 
-//     let evalE e = evalExpression (programMem, logicalMem) e
-//     match expression with 
-//     | 
-// let evalPredicate (programMem, logicalMem) predicate : bool = 
-//     let evalP p = evalPredicate (programMem, logicalMem) p
-//     match predicate with
-//     | BoolPred  (b) -> b
-//     | AndPred   (p1, p2)    -> (evalP p1) && (evalP p2)
-//     | OrPred    (p1, p2)    -> (evalP p1) || (evalP p2)
-//     | NotPred   (p0)        -> not (evalP p0)
-//     | IfPred    (p1, p2)    ->  if evalP p1 then evalP p2
-//                                 else true 
-//     | ExistsPred (ls, p0)   ->  
-//     | ForAllPred (ls, p0)   ->   
-//     | EqualPred (e0, e1)    -> 
-//     | NEqualPred        of (e * e)
-//     | GreaterPred       of (e * e)
-//     | GreaterEqualPred  of (e * e)
-//     | LessPred          of (e * e)
-//     | LessEqualPred     of (e * e)
-//     | CustomPred
