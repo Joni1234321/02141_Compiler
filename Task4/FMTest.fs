@@ -25,15 +25,14 @@ let buildArrayVariable (ls : float list) =
 
 // Tests
 let factorialGCL = (
-    "Factorial ",
+    "Factorial",
     "
-    x:=4;
     y:=1;
     do x>0 -> y:=x*y;
             x:=x-1
     od
     ",
-    defaultmem, 
+    Map ["x", Variable(4.0)], 
     Map ["y",Variable(24.0)]
 )
 

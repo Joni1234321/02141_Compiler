@@ -9,10 +9,10 @@ let emptyProgramMap = Map.empty<int, Step>
 
 // Convert From Graph to Map
 let getMap (pg : ProgramGraph) : ProgramMap =
-    List.foldBack (fun edge (programMap : ProgramMap) -> 
+    List.foldBack (fun (q0, alpha, q1) (programMap : ProgramMap) -> 
         // Extract key and step from program graph
-        match edge with 
-        | EdgeB(q0, bexpr, q1) -> 
+        match alpha with 
+        | AlphaB (bexpr) -> 
             // Append to list 
             match Map.tryFind q0 programMap with 
             | Some(StepB(ls)) -> Map.add q0 (StepB(ls @ [bexpr, q1])) programMap
@@ -24,7 +24,7 @@ let getMap (pg : ProgramGraph) : ProgramMap =
                 programMap
         
         // Can only exists one of this at the q
-        | EdgeC(q0, cexpr, q1) -> 
+        | AlphaC (cexpr) -> 
             Map.add q0 (StepC(cexpr, q1)) programMap) pg emptyProgramMap
 
 

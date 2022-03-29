@@ -39,11 +39,12 @@ let printC c : string =
 
 
 let printPG (pg : ProgramGraph) : string = 
-    let edgetostring = function
-        | EdgeB(q0, b, q1) -> 
-            sprintf "q%i -> q%i [label=\"%s\"]" q0 q1 ((printB b).Replace("\"", ""))
-        | EdgeC(q0, c, q1) -> 
-            sprintf "q%i -> q%i [label=\"%s\"]" q0 q1 ((printC c).Replace("\"", ""))
+    let edgetostring (q0, alpha, q1 ) =
+        match alpha with  
+        | AlphaB(b) -> 
+            sprintf "q%i -> \"q%i\" [label=\"%s\"]" q0 q1 ((printB b).Replace("\"", ""))
+        | AlphaC(c) -> 
+            sprintf "q%i -> \"q%i\" [label=\"%s\"]" q0 q1 ((printC c).Replace("\"", ""))
         
 
     let pgstring = List.foldBack (fun edge s -> sprintf "%s\n%s" (edgetostring edge) s) pg ""

@@ -57,13 +57,16 @@ let testGCL ( gcl : TestGCL ) =
     let pm = getMap pg
     let (q, mem) = evalN 1000 0 pm memin
 
-
-    printfn "Result of %s: %A" name mem
     
-    printfn "Pretty print: "
+    
+    // printfn "Result of %s: %A" name mem
+    
+    // printfn "Pretty print: "
 //    printfn "%A" c
 //    printfn "%s" (printCTree c)
 //    printfn "%A" (graph c false)
+
+
 
     printfn "%s" (printPG pg)
 //    printfn "%A" pm
@@ -74,6 +77,12 @@ let testGCL ( gcl : TestGCL ) =
     printf "Test passed: %b\n" passed 
     if not passed then printf "%A != %A" mem memout
     
+    let spf = 
+        if name = "Factorial" then computeShortestPath pg partialPredicateFactorial
+        else Set.empty
+    printf "Shortest paths %A" spf
+
+
     with err -> printf "Could not parse %s" name
  
     printf "\n\n"
@@ -98,9 +107,9 @@ let rec compute n =
         with err -> compute (n-1)
 
 testGCL factorialGCL 
-testGCL maximalGCL
-testGCL insertionsortGCL
-testGCL averageGCL
+// testGCL maximalGCL
+// testGCL insertionsortGCL
+// testGCL averageGCL
 
 // Start interacting with the user
 compute 3

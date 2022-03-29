@@ -13,12 +13,11 @@ let rec doneGCd gc =
     | ElseStatement (gc1, gc2) -> AndOp (doneGC gc1, doneGC gc2)
     
 
+type Alpha = 
+    | AlphaB of b
+    | AlphaC of c
 
-type Edge = 
-    | EdgeB of (int * b * int)
-    | EdgeC of (int * c * int)
-
-type ProgramGraph = Edge list
+type ProgramGraph = (int * Alpha * int) list
 
 let graph c (deterministic : bool) : ProgramGraph = 
     let mutable q = 0
@@ -36,10 +35,10 @@ let graph c (deterministic : bool) : ProgramGraph =
         | DoStatement(gc) -> 
             let b = doneGC gc
             let e = graphGC q0 q0 gc
-            e @ [EdgeB (q0, b, q1)]
-        | AssignStatement(x, a) ->          [EdgeC (q0, c, q1)]
-        | AssignArrayStatement(x, i, a) ->  [EdgeC (q0, c, q1)]
-        | SkipStatement ->                  [EdgeC (q0, c, q1)]
+            e @ [(q0, AlphaB(b), q1)]
+        | AssignStatement(x, a) ->          [(q0, AlphaC(c), q1)]
+        | AssignArrayStatement(x, i, a) ->  [(q0, AlphaC(c), q1)]
+        | SkipStatement ->                  [(q0, AlphaC(c), q1)]
 
     and graphGC (q0 : int) (q1 : int) gc : ProgramGraph = 
         match gc with
@@ -47,7 +46,7 @@ let graph c (deterministic : bool) : ProgramGraph =
             q <- q + 1
             let _q = q
             let e = graphC _q q1 c
-            [EdgeB (q0, b, _q)] @ e
+            [(q0, AlphaB(b), _q)] @ e
         | ElseStatement(gc1, gc2) -> 
             let e1 = graphGC q0 q1 gc1
             let e2 = graphGC q0 q1 gc2
@@ -68,7 +67,7 @@ let graph c (deterministic : bool) : ProgramGraph =
         | DoStatement (gc) ->
             let b = doneGC gc
             let (e, d) = graphGCd q0 q0 gc (Bool false)
-            e @ [EdgeB (q0, (NotOp d), q1)] 
+            e @ [(q0, AlphaB(NotOp d), q1)] 
         | _ -> graphC q0 q1 c
     and graphGCd (q0 : int)  (q1 : int) gc (d : b) : (ProgramGraph * b) =
         match gc with 
@@ -76,7 +75,7 @@ let graph c (deterministic : bool) : ProgramGraph =
             q <- q + 1
             let _q = q
             let e = graphCd _q q1 c
-            ([EdgeB (q0, (AndOp (b, NotOp d)), _q)] @ e, OrOp(b, d))
+            ([(q0, AlphaB(AndOp (b, NotOp d)), _q)] @ e, OrOp(b, d))
         | ElseStatement (gc1, gc2) ->
             let (e1, d1) = graphGCd q0 q1 gc1 d
             let (e2, d2) = graphGCd q0 q1 gc2 d1
