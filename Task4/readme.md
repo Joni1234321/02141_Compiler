@@ -21,4 +21,5 @@ AST.fs is the Abstract Syntax Tree
 **FMTest.fs**: Contains all helper functions used to make tests, as well as the tests themselves  
 **FMGraph.fs**: Contains the code that converts it into a program graph
 **FMStep.fs**: Contains the code that evaluates step by step
+**FMPredicate.fs** Contains the code for code Verification
 **FM4FUN.fsx**: The main file, contains the parser and all the main functions
