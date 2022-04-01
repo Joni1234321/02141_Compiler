@@ -57,16 +57,6 @@ let testGCL ( gcl : TestGCL ) =
     let pm = getMap pg
     let (q, mem) = evalN 1000 0 pm memin
 
-    
-    
-    // printfn "Result of %s: %A" name mem
-    
-    // printfn "Pretty print: "
-//    printfn "%A" c
-//    printfn "%s" (printCTree c)
-//    printfn "%A" (graph c false)
-
-
 
     printfn "%s" (printPG pg)
 //    printfn "%A" pm
@@ -77,12 +67,15 @@ let testGCL ( gcl : TestGCL ) =
     printf "Test passed: %b\n" passed 
     if not passed then printf "%A != %A" mem memout
     
-    let spf = 
-        if name = "Factorial" then computeShortestPath pg partialPredicateFactorial
-        else Set.empty
-    printf "Shortest paths %A" spf
 
-
+    let (spf, preds) = 
+        if name = "Factorial" then (computeShortestPath pg partialPredicateFactorial, partialPredicateFactorial)
+        else (Set.empty, Map.empty<int, Predicate>)
+    let reducedSPF = (reduceSPF spf preds)
+    printfn "Shortest paths %A" spf
+    printfn "SPF function"
+    printfn "%s\n" (List.foldBack (fun (q0,p,q1) s -> sprintf "(%d, %s, %d) \n %s " q0 (printPredicate p) q1 s) reducedSPF "")
+    
     with err -> printf "Could not parse %s" name
  
     printf "\n\n"

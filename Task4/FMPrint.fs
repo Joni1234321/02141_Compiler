@@ -18,17 +18,17 @@ let rec printA a : string =
 let rec printB b : string = 
     match b with
     | Bool(x) -> sprintf "%b" x
-    | AndOp(b1, b2) -> sprintf "( %s ) & ( %s )" (printB b1) (printB b2)
-    | OrOp(b1, b2) -> sprintf "( %s ) | ( %s )" (printB b1) (printB b2)
-    | ForAllOp(b1, b2) -> sprintf "( %s ) && ( %s )" (printB b1) (printB b2)
-    | ExistsOp (b1, b2) -> sprintf "( %s ) || ( %s )" (printB b1) (printB b2)
-    | NotOp (b) -> sprintf "!( %s )" (printB b) 
-    | EqualOp (a1, a2) -> sprintf "( %s ) = ( %s )" (printA a1) (printA a2)
-    | NEqualOp (a1, a2) -> sprintf "( %s ) != ( %s )" (printA a1) (printA a2)
-    | GreaterOp (a1, a2) -> sprintf "( %s ) > ( %s )" (printA a1) (printA a2)
-    | GreaterEqualOp (a1, a2) -> sprintf "( %s ) >= ( %s )" (printA a1) (printA a2)
-    | LessOp (a1, a2) -> sprintf "( %s ) < ( %s )" (printA a1) (printA a2)
-    | LessEqualOp (a1, a2) -> sprintf "( %s ) <= ( %s )" (printA a1) (printA a2)
+    | AndOp(b1, b2) -> sprintf "( %s & %s )" (printB b1) (printB b2)
+    | OrOp(b1, b2) -> sprintf "( %s | %s )" (printB b1) (printB b2)
+    | ForAllOp(b1, b2) -> sprintf "( %s && %s )" (printB b1) (printB b2)
+    | ExistsOp (b1, b2) -> sprintf "( %s || %s )" (printB b1) (printB b2)
+    | NotOp (b) -> sprintf "!%s" (printB b) 
+    | EqualOp (a1, a2) -> sprintf "( %s == %s )" (printA a1) (printA a2)
+    | NEqualOp (a1, a2) -> sprintf "( %s != %s )" (printA a1) (printA a2)
+    | GreaterOp (a1, a2) -> sprintf "( %s > %s )" (printA a1) (printA a2)
+    | GreaterEqualOp (a1, a2) -> sprintf "( %s >= %s )" (printA a1) (printA a2)
+    | LessOp (a1, a2) -> sprintf "( %s < %s )" (printA a1) (printA a2)
+    | LessEqualOp (a1, a2) -> sprintf "( %s <= %s )" (printA a1) (printA a2)
 
 let printC c : string = 
     match c with
