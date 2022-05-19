@@ -1,0 +1,18 @@
+Extend the lexer with new tokens and rules in file: 
+    FM4FUNLexer.fsl
+
+
+Extend the parser with the new tokens and their precedence and associativity rules in file: 
+    FM4FUNLexer.fsp
+
+
+Extend the parser with new grammar rules in file: 
+    FM4FUNLexer.fsp
+
+
+Extend the abstract syntax: type expr in file 
+    FM4FUNTypesAST.fs
+
+
+Extend the evaluation function eval in file 
+    FM4FUNTypesAST.fs
